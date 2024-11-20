@@ -1,4 +1,4 @@
-{% set version = "2.9.2" %}
+{% set version = "2.10.0" %}
 
 package:
   name: rancher-cli
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/rancher/cli/archive/v{{ version }}.tar.gz
-  sha256: 6da91cd58ad5c56d51a14a21ffc27201e46ad25c7fa91ecedad3230bc00fb085
+  sha256: d44358847d6f25bb185f79cb1f8ef8b91ba644b29dc2832e593f31b98fd49765
 
 build:
   number: 0
