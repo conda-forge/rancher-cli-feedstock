@@ -31,7 +31,7 @@ tests:
     script:
       - rancher --help
       - rancher --version
-      - rancher --version | grep -iE "^rancher version v{{ version | replace(".", "\\.") }}$"
+      - rancher --version | grep -iE "^rancher version v${{ version | replace(".", "\\.") }}$"
 
 about:
   license: Apache-2.0
