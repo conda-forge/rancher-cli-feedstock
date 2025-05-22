@@ -2,7 +2,7 @@
 schema_version: 1
 
 context:
-  version: 2.11.1
+  version: "2.11.2"
 
 package:
   name: rancher-cli
@@ -10,7 +10,7 @@ package:
 
 source:
   url: https://github.com/rancher/cli/archive/v${{ version }}.tar.gz
-  sha256: fc41afbfb432c71c731a6def381f28c2c56be91c888a33bde359b6842feff4e5
+  sha256: 6e8fea75ba3f6584e10edeab4db53e15453677ee80489b2d550c96eda5c2ef85
 
 build:
   number: 0
