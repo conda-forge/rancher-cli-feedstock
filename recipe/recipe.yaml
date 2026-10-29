@@ -2,7 +2,9 @@
 schema_version: 1
 
 context:
-  version: "2.15.2"
+  version: "2.15.3"
+  go_ld_flags: -w -s -X main.VERSION=v${{ version }} -extldflags -static
+  go_build: go build -v -buildmode=pie -trimpath -modcacherw -ldflags="${{ go_ld_flags }}"
 
 package:
   name: rancher-cli
@@ -10,28 +12,32 @@ package:
 
 source:
   url: https://github.com/rancher/cli/archive/v${{ version }}.tar.gz
-  sha256: 77ed5b7cc5ba86962c241ec6e96efc48871c115ee04ec180e43f3b8a44c59973
+  sha256: c9ea33994de4c4600a403fd6c90545d3481b60fe4e5e96318dbc28c40faa7c68
 
 build:
   number: 0
   script:
-    file: build-rancher-cli
-
+    content:
+      - if: unix
+        then: ${{ go_build }} -o "${PREFIX}/bin/rancher"
+        else: ${{ go_build }} -o "%SCRIPTS%\rancher.exe"
+      - go-licenses save . --save_path library_licenses
 requirements:
   build:
     - ${{ compiler("go") }}
+    - ${{ compiler("c") }}
     - ${{ stdlib("c") }}
     - go-licenses
 
 tests:
-  - requirements:
-      run:
-        - if: win
-          then: m2-grep
-    script:
+  - package_contents:
+      strict: true
+      bin:
+        - rancher
+  - script:
       - rancher --help
       - rancher --version
-      - rancher --version | grep -iE "^rancher version v${{ version | replace(".", "\\.") }}$"
+      - rancher --version | ${{ "grep -iE " if unix else "findstr /r /c:" }}${{ version | replace(".", "\\.") }}
 
 about:
   license: Apache-2.0
