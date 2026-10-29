@@ -25,6 +25,7 @@ build:
 requirements:
   build:
     - ${{ compiler("go") }}
+    - ${{ compiler("c") }}
     - ${{ stdlib("c") }}
     - go-licenses
 
