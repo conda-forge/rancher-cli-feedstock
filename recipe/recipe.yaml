@@ -3,6 +3,14 @@ schema_version: 1
 
 context:
   version: "2.15.3"
+  go_ld_flags: -w -s -X main.VERSION=v${{ version }} -extldflags -static
+  go_build: go build -v -buildmode=pie -trimpath -modcacherw
+  cli_bin_win: |-
+    %SCRIPTS%\rancher.exe
+  cli_bin_unix: |-
+    "${PREFIX}/bin/rancher
+  cli_bin: ${{ cli_bin_unix if unix else cli_bin_win }}
+  grep_: ${{ "grep -iE " if win else "findstr /r /c:" }}
 
 package:
   name: rancher-cli
@@ -15,8 +23,9 @@ source:
 build:
   number: 0
   script:
-    file: build-rancher-cli
-
+    content:
+      - ${{ go_build }}  -ldflags="${{ go_ld_flags }}" -o "${{ cli_bin }}"
+      - go-licenses save . --save_path library_licenses
 requirements:
   build:
     - ${{ compiler("go") }}
@@ -24,14 +33,14 @@ requirements:
     - go-licenses
 
 tests:
-  - requirements:
-      run:
-        - if: win
-          then: m2-grep
-    script:
+  - package_contents:
+      strict: true
+      bin:
+        - rancher-cli
+  - script:
       - rancher --help
       - rancher --version
-      - rancher --version | grep -iE "^rancher version v${{ version | replace(".", "\\.") }}$"
+      - rancher --version | ${{ grep_ }}${{ version | replace(".", "\\.") }}
 
 about:
   license: Apache-2.0
