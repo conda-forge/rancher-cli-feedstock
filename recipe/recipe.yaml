@@ -33,7 +33,7 @@ tests:
   - package_contents:
       strict: true
       bin:
-        - rancher-cli
+        - rancher
   - script:
       - rancher --help
       - rancher --version
