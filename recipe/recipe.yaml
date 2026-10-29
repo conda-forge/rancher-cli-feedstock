@@ -37,7 +37,7 @@ tests:
   - script:
       - rancher --help
       - rancher --version
-      - rancher --version | ${{ "grep -iE " if win else "findstr /r /c:" }}${{ version | replace(".", "\\.") }}
+      - rancher --version | ${{ "grep -iE " if unix else "findstr /r /c:" }}${{ version | replace(".", "\\.") }}
 
 about:
   license: Apache-2.0
